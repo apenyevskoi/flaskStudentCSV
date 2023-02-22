@@ -4,11 +4,13 @@ app = Flask('__name__')
 
 studLst = []
 
+
 def checkId(id):
     for i in studLst:
         if i['id'] == id:
             return True
     return False
+
 
 def checkIdFalse(id):
     for i in studLst:
@@ -23,7 +25,6 @@ def removeDBduplicates(studL):
         if studL.count(dict) > 1:
             studL.pop(studL.index(dict))
     return studL
-
 
 @app.route('/', methods=['POST'])
 def postDataJSON():
@@ -43,7 +44,6 @@ def postDataJSON():
     except ValueError:
         return 'value error'
     return 'Ok'
-
 
 @app.route('/', methods=['PUT'])
 def putDataJSON():
@@ -76,6 +76,7 @@ def getDataQuery():
                 return str(i['id']) + ',' + i['name'] + ',' + i['class']
     except ValueError:
         return 'value error'
+
 
 if __name__ == '__main__':
     try:
