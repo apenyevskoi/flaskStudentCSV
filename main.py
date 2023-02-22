@@ -5,11 +5,16 @@ app = Flask('__name__')
 studLst = []
 
 def checkId(id):
-    print(studLst, id)
     for i in studLst:
         if i['id'] == id:
             return True
     return False
+
+def checkIdFalse(id):
+    for i in studLst:
+        if i['id'] == id:
+            return False
+    return True
 
 
 def removeDBduplicates(studL):
@@ -22,7 +27,7 @@ def removeDBduplicates(studL):
 
 @app.route('/', methods=['POST'])
 def postDataJSON():
-    if not request.get_json() or checkId(request.get_json()['id']) == False:
+    if not request.get_json() or checkIdFalse(request.get_json()['id']) == False:
         abort(400)
     content = request.get_json()
     try:
@@ -35,14 +40,13 @@ def postDataJSON():
         with open('database.csv', 'a') as dbCSV:
             dbCSV.write( str( stud['id'] ) + ',' + stud['name'] + ',' + stud['class'] + '\n' )
         dbCSV.close()
-    except BaseException:
-        print('here')
-        print('error')
+    except ValueError:
+        return 'value error'
     return 'Ok'
 
 
 @app.route('/', methods=['PUT'])
-def getDataJSON():
+def putDataJSON():
     if not request.get_json() or not checkId(request.get_json()['id']):
         return '400, id not in DB'
     try:
@@ -57,10 +61,21 @@ def getDataJSON():
                 dbCSV.close()
         print(studLst)
         return 'Ok'
-    except BaseException:
-        print('here3')
-        return 'error'
+    except ValueError:
+        return 'value error'
 
+@app.route('/query-get', methods=['GET']) # curl -X GET 127.0.0.1:5000/query-get?id=123
+def getDataQuery():
+    if not request.args.get('id') or not checkId(int(request.args.get('id'))):
+        return '400, id not in DB'
+    try:
+        content = request.args.get('id')
+        for i in studLst:
+
+            if int(content) == i['id']:
+                return str(i['id']) + ',' + i['name'] + ',' + i['class']
+    except ValueError:
+        return 'value error'
 
 if __name__ == '__main__':
     try:
@@ -79,6 +94,6 @@ if __name__ == '__main__':
             for i in studLst:
                 dbCSV.write(str(i['id']) + ',' + i['name'] + ',' + i['class'] + '\n')
         dbCSV.close()
-    except (ValueError):
+    except (ValueError, BaseException):
         print('error')
     app.run(debug=True)

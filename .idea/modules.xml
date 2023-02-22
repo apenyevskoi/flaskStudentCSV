@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/flaskLearning.iml" filepath="$PROJECT_DIR$/.idea/flaskLearning.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/flaskStudentDB.iml" filepath="$PROJECT_DIR$/.idea/flaskStudentDB.iml" />
     </modules>
   </component>
 </project>
